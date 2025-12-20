@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Force build even without changes'
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-release:
+    name: Build & Release
+    uses: mrops-br/gha-workflows/.github/workflows/_pipeline-container.yaml@main
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      security-events: write
+    secrets: inherit
+    with:
+      image-name: ${{ github.repository_owner }}/auth-keycloak
+      registry: ghcr.io
+      context: .
+      dockerfile: ./Dockerfile
+      platforms: linux/amd64
+      enable-lint-dockerfile: true
+      dockerfile-failure-threshold: warning
+      enable-signing: true
+      enable-scanning: true
+      scan-severity: 'CRITICAL,HIGH'
+      enable-auto-release: true
+      enable-changelog: true
+      changelog-config: cliff.toml
+      lint-runner: 'ubuntu-latest'
+      build-runner: 'shared-runners'

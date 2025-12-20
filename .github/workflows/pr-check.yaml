@@ -1,0 +1,37 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Lint & Build
+    uses: mrops-br/gha-workflows/.github/workflows/_pipeline-container.yaml@main
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      security-events: write
+    secrets: inherit
+    with:
+      image-name: ${{ github.repository_owner }}/auth-keycloak
+      registry: ghcr.io
+      context: .
+      dockerfile: ./Dockerfile
+      platforms: linux/amd64
+      enable-lint-dockerfile: true
+      dockerfile-failure-threshold: warning
+      enable-signing: false
+      enable-scanning: true
+      scan-severity: 'CRITICAL,HIGH'
+      enable-auto-release: false
+      enable-changelog: false
+      lint-runner: 'ubuntu-latest'
+      build-runner: 'shared-runners'
