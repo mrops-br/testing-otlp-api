@@ -4,8 +4,8 @@ FROM golang:1.21-alpine3.19 AS builder
 # Install build dependencies with pinned versions
 RUN apk add --no-cache \
     git=~2.43 \
-    ca-certificates=~20240226 \
-    tzdata=~2024a
+    ca-certificates=~20250911 \
+    tzdata=~2025b
 
 # Set working directory
 WORKDIR /build
@@ -32,8 +32,8 @@ FROM alpine:3.19
 
 # Install ca-certificates for HTTPS connections and timezone data
 RUN apk --no-cache add \
-    ca-certificates=~20240226 \
-    tzdata=~2024a \
+    ca-certificates=~20250911 \
+    tzdata=~2025b \
     wget=~1.21
 
 # Create non-root user
