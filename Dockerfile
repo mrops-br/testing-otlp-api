@@ -1,5 +1,5 @@
 # Stage 1: Build the Go application
-FROM golang:1.21-alpine3.19 AS builder
+FROM golang:1.23-alpine3.19 AS builder
 
 # Install build dependencies with pinned versions
 RUN apk add --no-cache \
