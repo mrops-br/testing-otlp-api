@@ -1,0 +1,32 @@
+# Hadolint configuration
+# https://github.com/hadolint/hadolint
+
+# Ignore specific rules
+ignored:
+  # DL3018: We pin the Alpine base image version which ensures
+  # package version reproducibility. Individual package pinning breaks when
+  # packages are updated in the repository.
+  - DL3018
+
+# Trusted registries (optional)
+trustedRegistries:
+  - docker.io
+  - gcr.io
+  - ghcr.io
+
+# Allowed labels (optional)
+label-schema:
+  author: text
+  version: text
+  description: text
+
+# Strict labels (optional - uncomment to enforce)
+# strict-labels: true
+
+# Failure threshold
+# error: Fail on errors only
+# warning: Fail on warnings and errors
+# info: Fail on all issues
+# style: Fail on style issues
+# ignore: Don't fail
+failure-threshold: warning
