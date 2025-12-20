@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: products-api-config
+  namespace: staging
+  labels:
+    app: products-api
+    environment: staging
+data:
+  SERVER_HOST: "0.0.0.0"
+  SERVER_PORT: "8080"
+
+  # Staging OTLP Collector
+  OTEL_EXPORTER_OTLP_ENDPOINT: "otel-collector.observability.svc.cluster.local:4317"
+  OTEL_SERVICE_NAME: "products-api"
+  OTEL_ENVIRONMENT: "staging"

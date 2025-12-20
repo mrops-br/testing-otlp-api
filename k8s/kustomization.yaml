@@ -1,0 +1,34 @@
+# Kustomize configuration for easy multi-environment deployments
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: default
+
+# Common labels applied to all resources
+commonLabels:
+  app: products-api
+  managed-by: kustomize
+
+# Resources to deploy
+resources:
+  - configmap.yaml
+  - deployment.yaml
+  - service.yaml
+  - hpa.yaml
+  - ingress.yaml
+  - servicemonitor.yaml
+
+# Images to use
+images:
+  - name: products-api
+    newTag: latest
+
+# ConfigMap generator (alternative to configmap.yaml)
+# configMapGenerator:
+#   - name: products-api-config
+#     literals:
+#       - SERVER_HOST=0.0.0.0
+#       - SERVER_PORT=8080
+#       - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector.observability.svc.cluster.local:4317
+#       - OTEL_SERVICE_NAME=products-api
+#       - OTEL_ENVIRONMENT=production

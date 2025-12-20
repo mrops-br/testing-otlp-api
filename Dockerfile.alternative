@@ -1,11 +1,17 @@
-# Stage 1: Build the Go application
-FROM golang:1.25.5-alpine3.22 AS builder
+# Alternative Dockerfile with better maintainability
+# This version pins the base image but not individual packages
+# Recommended for production use to avoid build breaks
 
-# Install build dependencies with pinned versions
+# Stage 1: Build the Go application
+FROM golang:1.24-alpine3.19 AS builder
+
+# Install build dependencies
+# Note: alpine:3.19 is pinned, which ensures reproducible builds
+# Individual package versions are managed by the Alpine release
 RUN apk add --no-cache \
-    git=~2.43 \
-    ca-certificates=~20250911 \
-    tzdata=~2025b
+    git \
+    ca-certificates \
+    tzdata
 
 # Set working directory
 WORKDIR /build
@@ -28,13 +34,13 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     main.go
 
 # Stage 2: Create minimal runtime image
-FROM alpine:3.22
+FROM alpine:3.19
 
 # Install ca-certificates for HTTPS connections and timezone data
 RUN apk --no-cache add \
-    ca-certificates=~20250911 \
-    tzdata=~2025b \
-    wget=~1.21
+    ca-certificates \
+    tzdata \
+    wget
 
 # Create non-root user
 RUN addgroup -g 1001 appgroup && \

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: products-api-config
+  namespace: development
+  labels:
+    app: products-api
+    environment: development
+data:
+  SERVER_HOST: "0.0.0.0"
+  SERVER_PORT: "8080"
+
+  # Development OTLP Collector (might be in same namespace)
+  OTEL_EXPORTER_OTLP_ENDPOINT: "otel-collector.development.svc.cluster.local:4317"
+  OTEL_SERVICE_NAME: "products-api"
+  OTEL_ENVIRONMENT: "development"

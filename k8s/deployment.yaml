@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-api
+  namespace: default
+  labels:
+    app: products-api
+    version: v1
+spec:
+  replicas: 3
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: products-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: products-api
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Security Context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+      - name: products-api
+        image: products-api:latest
+        imagePullPolicy: IfNotPresent
+
+        # Port Configuration
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+
+        # Environment Variables from ConfigMap
+        envFrom:
+        - configMapRef:
+            name: products-api-config
+
+        # Optional: Override specific values or add secrets
+        # env:
+        # - name: OTEL_EXPORTER_OTLP_ENDPOINT
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: products-api-secrets
+        #       key: otlp-endpoint
+
+        # Resource Limits and Requests
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+
+        # Liveness Probe
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+
+        # Readiness Probe
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+
+        # Startup Probe (for slow-starting containers)
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 12
+
+        # Container Security Context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
+
+        # Volume Mounts (for read-only root filesystem)
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+
+      # Volumes
+      volumes:
+      - name: tmp
+        emptyDir: {}
+
+      # Termination Grace Period
+      terminationGracePeriodSeconds: 30
+
+      # Restart Policy
+      restartPolicy: Always
+
+      # DNS Policy
+      dnsPolicy: ClusterFirst

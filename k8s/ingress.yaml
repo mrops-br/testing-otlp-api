@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: products-api-ingress
+  namespace: default
+  labels:
+    app: products-api
+  annotations:
+    # Nginx Ingress Controller
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+    # SSL/TLS Configuration
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+    # Rate Limiting
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+
+    # CORS (if needed)
+    # nginx.ingress.kubernetes.io/enable-cors: "true"
+    # nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    # nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+
+    # AWS ALB Ingress Controller (alternative)
+    # kubernetes.io/ingress.class: alb
+    # alb.ingress.kubernetes.io/scheme: internet-facing
+    # alb.ingress.kubernetes.io/target-type: ip
+    # alb.ingress.kubernetes.io/healthcheck-path: /health
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - products-api.yourdomain.com
+    secretName: products-api-tls
+  rules:
+  - host: products-api.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: products-api
+            port:
+              number: 80

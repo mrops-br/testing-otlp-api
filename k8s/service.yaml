@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-api
+  namespace: default
+  labels:
+    app: products-api
+  annotations:
+    # For cloud load balancers
+    # service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    # cloud.google.com/load-balancer-type: "Internal"
+spec:
+  type: ClusterIP
+  selector:
+    app: products-api
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+  sessionAffinity: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-api-headless
+  namespace: default
+  labels:
+    app: products-api
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: products-api
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: http
