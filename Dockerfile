@@ -1,8 +1,11 @@
 # Stage 1: Build the Go application
-FROM golang:1.21-alpine AS builder
+FROM golang:1.21-alpine3.19 AS builder
 
-# Install build dependencies
-RUN apk add --no-cache git ca-certificates tzdata
+# Install build dependencies with pinned versions
+RUN apk add --no-cache \
+    git=~2.43 \
+    ca-certificates=~20240226 \
+    tzdata=~2024a
 
 # Set working directory
 WORKDIR /build
@@ -25,10 +28,13 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     main.go
 
 # Stage 2: Create minimal runtime image
-FROM alpine:latest
+FROM alpine:3.19
 
 # Install ca-certificates for HTTPS connections and timezone data
-RUN apk --no-cache add ca-certificates tzdata
+RUN apk --no-cache add \
+    ca-certificates=~20240226 \
+    tzdata=~2024a \
+    wget=~1.21
 
 # Create non-root user
 RUN addgroup -g 1001 appgroup && \
