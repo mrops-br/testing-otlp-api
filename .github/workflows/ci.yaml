@@ -27,7 +27,7 @@ jobs:
       security-events: write
     secrets: inherit
     with:
-      image-name: ${{ github.repository_owner }}/auth-keycloak
+      image-name: ${{ github.repository_owner }}/optl-testing-api
       registry: ghcr.io
       context: .
       dockerfile: ./Dockerfile

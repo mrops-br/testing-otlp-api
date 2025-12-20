@@ -30,8 +30,17 @@ A Go REST API built with clean architecture principles and comprehensive OpenTel
 
 ## Prerequisites
 
+### Local Development
 - Go 1.21 or higher
 - LGTM stack (or OpenTelemetry Collector) running and accepting OTLP data
+
+### Docker Deployment
+- Docker and Docker Compose
+
+### Kubernetes Deployment
+- Kubernetes cluster (1.21+)
+- kubectl configured
+- OpenTelemetry Collector deployed in cluster
 
 ## Configuration
 
@@ -126,6 +135,75 @@ This starts:
 - **OpenTelemetry Collector** (optional) on ports 4317/4318
 
 Access Grafana at `http://localhost:3000` (no login required in dev mode).
+
+## Running on Kubernetes
+
+The application is **fully ConfigMap-ready** for Kubernetes deployments.
+
+### Quick Deploy
+
+```bash
+# 1. Update ConfigMap with your OTLP collector endpoint
+# Edit k8s/configmap.yaml and change OTEL_EXPORTER_OTLP_ENDPOINT
+
+# 2. Update image in k8s/deployment.yaml
+
+# 3. Deploy
+kubectl create namespace production
+kubectl apply -f k8s/configmap.yaml -n production
+kubectl apply -f k8s/deployment.yaml -n production
+kubectl apply -f k8s/service.yaml -n production
+
+# 4. Test
+kubectl port-forward -n production svc/products-api 8080:80
+curl http://localhost:8080/health
+```
+
+### What's Included
+
+- **ConfigMap**: Externalized configuration (OTLP endpoint, environment, etc.)
+- **Deployment**: Production-ready with health checks, resource limits, security contexts
+- **Service**: ClusterIP and headless services
+- **HPA**: Horizontal Pod Autoscaler (2-10 replicas based on CPU/memory)
+- **Ingress**: External access configuration
+- **ServiceMonitor**: Prometheus metrics scraping
+
+### ConfigMap-Based Configuration
+
+All configuration is managed via ConfigMaps:
+
+```yaml
+# k8s/configmap.yaml
+data:
+  OTEL_EXPORTER_OTLP_ENDPOINT: "otel-collector.observability.svc.cluster.local:4317"
+  OTEL_SERVICE_NAME: "products-api"
+  OTEL_ENVIRONMENT: "production"
+```
+
+Update configuration without rebuilding:
+
+```bash
+# Edit ConfigMap
+kubectl edit configmap products-api-config -n production
+
+# Restart to apply changes
+kubectl rollout restart deployment/products-api -n production
+```
+
+### Environment-Specific Deployments
+
+```bash
+# Development
+kubectl apply -f k8s/configmap-dev.yaml -n development
+
+# Staging
+kubectl apply -f k8s/configmap-staging.yaml -n staging
+
+# Production
+kubectl apply -f k8s/configmap-prod.yaml -n production
+```
+
+**For complete Kubernetes documentation, see [KUBERNETES.md](KUBERNETES.md)**
 
 ## API Endpoints
 
