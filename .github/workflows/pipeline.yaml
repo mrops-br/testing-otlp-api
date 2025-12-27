@@ -1,7 +1,11 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
+    branches:
+      - main
+      - develop
+  pull_request:
     branches:
       - main
       - develop
@@ -27,18 +31,7 @@ jobs:
       security-events: write
     secrets: inherit
     with:
-      image-name: ${{ github.repository_owner }}/testing-otlp-api
-      registry: ghcr.io
+      image-name: ${{ github.repository }}
       context: .
       dockerfile: ./Dockerfile
-      platforms: linux/amd64
-      enable-lint-dockerfile: true
-      dockerfile-failure-threshold: warning
-      enable-signing: true
-      enable-scanning: true
-      scan-severity: 'CRITICAL,HIGH'
-      enable-auto-release: true
       enable-changelog: true
-      changelog-config: cliff.toml
-      lint-runner: 'ubuntu-latest'
-      build-runner: 'shared-runners'
