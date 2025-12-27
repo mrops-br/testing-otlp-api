@@ -1,0 +1,181 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.txt
+coverage.html
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# Go build cache
+.cache/
+
+# Compiled application binaries
+testing-api
+products-api
+main
+*.bin
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+.history/
+
+# IDE - JetBrains (GoLand, IntelliJ)
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# IDE - Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# IDE - Emacs
+*~
+\#*\#
+.\#*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Docker
+docker-compose.override.yml
+.dockerignore.local
+
+# Docker volumes (if running locally)
+*-data/
+volumes/
+
+# Kubernetes local configs
+*.kubeconfig
+kubeconfig
+kubeconfig.*
+
+# Local Kubernetes testing
+k8s/local/
+k8s/*.local.yaml
+k8s/*-local.yaml
+
+# Helm
+*.tgz
+charts/*/charts/
+.helmignore.local
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+certs/
+secrets/
+
+# Terraform (if used for infrastructure)
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Build artifacts
+build/
+dist/
+out/
+bin/
+
+# Configuration overrides
+config.local.yaml
+config.local.yml
+*-local.yaml
+*-local.yml
+
+# Profiling data
+*.prof
+*.pprof
+cpu.prof
+mem.prof
+trace.out
+
+# Air live reload (if used)
+.air.toml
+tmp/
+
+# Database files (if using local SQLite for testing)
+*.db
+*.sqlite
+*.sqlite3
+
+# Mock generation
+*_mock.go
+mocks/
+
+# Documentation build
+docs/_build/
+site/
+
+# Node modules (if frontend exists)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if any scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+.venv/
+
+# Misc
+.keep

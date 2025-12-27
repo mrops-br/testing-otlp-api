@@ -1,0 +1,44 @@
+# Binaries
+products-api
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test files
+*.test
+*.out
+
+# Documentation
+*.md
+LICENSE
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# CI/CD
+.github
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Plans
+.claude
