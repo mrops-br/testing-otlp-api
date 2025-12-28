@@ -80,7 +80,7 @@ func (s *Server) setupRoutes() {
 	// Health check endpoint
 	s.router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		_ = w.Write([]byte("OK"))
 	})
 
 	// Prometheus metrics endpoint - exposes OpenTelemetry metrics
