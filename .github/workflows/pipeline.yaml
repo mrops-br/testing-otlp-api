@@ -22,7 +22,7 @@ concurrency:
 
 env:
   APP_NAME: &app_name otlp-api
-  GITOPS_REPO: &gitops_repo mrops-br/gitops-testing
+  PROJECT_NAME: &project_name testing
 
 jobs:
   pipeline:
@@ -37,7 +37,8 @@ jobs:
     with:
       # Application configuration
       app-name: *app_name
-      gitops-repo: *gitops_repo
+      image-name: ${{ github.repository }}
+      project-name: *project_name
 
       # Go configuration
       go-version: '1.25'
