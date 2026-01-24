@@ -1,5 +1,5 @@
 # Stage 1: Build the Go application
-FROM golang:1.25.5-alpine3.22 AS builder
+FROM golang:1.25.6-alpine3.22 AS builder
 
 # Install build dependencies
 # Pinning Alpine version (3.22) ensures reproducible builds
